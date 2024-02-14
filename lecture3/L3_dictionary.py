@@ -221,7 +221,13 @@ fruit_genus = {
 }
 
 # In one line, update the value 'apple' to 'malus'
+fruit_genus["apple"] = 'malus'
+#fruit_genus.update({"apple":'malus'})
 
 # In one line, change the key 'orange' to 'lemon'
+fruit_genus['lemon'] = fruit_genus.pop("orange")
+print(fruit_genus)
 
 # Create a new dictionary (name it d) with items from fruit_genus. The keys in d must contain the substring 'pl'.
+d = { key:value for key, value in fruit_genus.items() if "pl" in key}
+print(d)
