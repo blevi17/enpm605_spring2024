@@ -1,10 +1,11 @@
 
 import rpg.player 
+from abc import ABC, abstractmethod
 """
 This file contains the Enemy class.
 """
 
-class Enemy():
+class Enemy(ABC):
     """
     A class representing an enemy in the game.
 
@@ -14,8 +15,47 @@ class Enemy():
     """
 
     def __init__(self, name="Enemy", health=50):
-        self.name = name
-        self.health = health
+        self._name = name
+        self._health = health
+    @property
+    def name(self):
+        return self.name     
+    
+    @property
+    def health(self):
+        return self._health
+    
+    @name.setter
+    def name(self, name):
+        if isinstance(name, str):
+            self._name = name
+        else:
+            raise TypeError("Name must be a string")
+    
+    @health.setter    
+    def health(self, health):
+        if isinstance(health, int):
+            self._health = health
+        else:
+            raise TypeError("Health must be an int")
+    
+    @name.deleter    
+    def name(self):
+        del self._name
+    
+    @health.deleter    
+    def health(self):
+        del self._health
+        
+    # name = property(fget=_get_name, fset=_set_name, fdel=_del_name, doc="The name of the enemy.")
+    # health = property(fget=_get_health, fset=_set_health, fdel=_del_health, doc="The health of the enemy.")
+    
+    @classmethod
+    def create_enemies(cls):
+        """
+        Create a list of enemies
+        """
+        return [cls("Goblin"), cls("Vampire")]
 
     def __str__(self):
         """
@@ -24,7 +64,7 @@ class Enemy():
         Returns:
             str: The string representation of the enemy.
         """
-        return f"{self.name} has {self.health} health."
+        return f"{self._name} has {self._health} health."
     
     def __repr__(self):
         """
@@ -33,8 +73,9 @@ class Enemy():
         Returns:
             str: The string representation of the enemy.
         """
-        return f"{self.name} has {self.health} health."
+        return f"{self._name} has {self._health} health."
 
+    @abstractmethod
     def attack(self, player: rpg.player.Player, damage):
         """
         Attack the player.
@@ -43,9 +84,10 @@ class Enemy():
             player (Player): The player to attack.
             damage (int): The amount of damage to deal.
         """
-        print(f"🧟🗡️ {self.name} attacks {player.name}!")
+        print(f"🧟🗡️ {self._name} attacks {player.name}!")
         player.take_damage(damage)
 
+    @abstractmethod
     def take_damage(self, damage):
         """
         Take damage from the player.
@@ -53,11 +95,11 @@ class Enemy():
         Args:
             damage (int): The amount of damage to take.
         """
-        self.health -= damage
-        if self.health <= 0:
-            print(f"🧟💀 {self.name} has been defeated!")
+        self._health -= damage
+        if self._health <= 0:
+            print(f"🧟💀 {self._name} has been defeated!")
         else:
-            print(f"🧟💜 {self.name} has {self.health} health left.")
+            print(f"🧟💜 {self._name} has {self._health} health left.")
 
 
 class Skeleton(Enemy):
@@ -71,6 +113,9 @@ class Skeleton(Enemy):
     def __init__(self, shield_power, name="Skeleton"):
         super().__init__(name=name, health=50)
         self._shield_power = shield_power
+        
+    def attack(self, player: rpg.player.Player, damage):
+        pass
         
     def take_damage(self, damage):
         """
@@ -102,6 +147,15 @@ class Dragon(Enemy):
             damage (int): The amount of damage to deal.
         """
         super().attack(player, damage + self._fire_breath_power)
+        
+    def use_tail_wip(player: rpg.player.Player):
+        """
+        Use the dragon's tail whip attack on the player
+        
+        Args:
+            player (Player): The player to attack.
+        """
+        pass
  
         
 if __name__ == "__main__":
